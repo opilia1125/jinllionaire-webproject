@@ -10,7 +10,7 @@
   <meta name="keywords" content="前世診断, 占い, ゆるい, Z世代, ゆるキャラ, モバイルウェブ, サジュ">
   <meta name="author" content="Antigravity">
   
-  <title>あなたのクソ前世診断</title>
+  <title data-i18n="title">あなたのクソ前世診断</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -91,7 +91,7 @@
         
         <!-- Anchor Banner Placeholder -->
         <div class="py-2 border-b border-gray-100 flex flex-col items-center hidden" id="ad-anchor-container">
-          <span class="text-[9px] text-gray-400 font-bold tracking-wider mb-1">スポンサーリンク</span>
+          <span data-i18n="sponsorLink" class="text-[9px] text-gray-400 font-bold tracking-wider mb-1">スポンサーリンク</span>
           <div class="w-[320px] h-[50px] flex items-center justify-center relative overflow-hidden rounded bg-gray-50 border border-gray-100">
             <!-- 광고 삽입 대기 영역 -->
           </div>
@@ -333,11 +333,11 @@
 
           <!-- Copy Result Text Button -->
           <button onclick="copyResultText()" class="w-full py-3.5 bg-yellow-400 text-gray-900 border-b-4 border-yellow-600 rounded-2xl font-black text-xs hover:opacity-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-            <span>📋 結果テキストをコピー</span>
+            <span data-i18n="copyBtn">📋 結果テキストをコピー</span>
           </button>
 
           <!-- Reset / Restart Button -->
-          <button id="btn-reset" onclick="resetDiagnosis()" class="w-full py-3.5 text-gray-400 hover:text-gray-600 rounded-2xl font-bold text-xs transition-all text-center">
+          <button id="btn-reset" onclick="resetDiagnosis()" class="w-full py-3.5 text-gray-400 hover:text-gray-600 rounded-2xl font-bold text-xs transition-all text-center" data-i18n="resetBtn">
             ← 診断をやり直す
           </button>
 
@@ -542,7 +542,7 @@
                               "A": "「キャー、行く行く！」と口では言い、光の速度でクッションファンデを叩き、フルメイク15分フィニッシュの奇跡を起こす。",
                               "B": "「あ…今、生理痛が酷くてロキソニン飲んで寝てるの（泣）（嘘）」と儚いフリをしてベッドに沈む。",
                               "C": "通知で確認して返信せず、夜8時頃になってから「ごめん寝てて今見た！ショックすぎる泣」を使う。",
-                              "D": "「うちの近く의 카페なら行く」絶対に電車に乗りたくない強い意志で、徒歩5分のカフェに召喚する。"
+                              "D": "「うちの近くのカフェなら行く」絶対に電車に乗りたくない強い意志で、徒歩5分のカフェに召喚する。"
                         }
                   },
                   {
@@ -640,12 +640,12 @@
                   {
                         "id": "Q7",
                         "element": "Tarot2",
-                        "text": "明日の朝9時に人生がかかった大事な面接がある。夜11時に電気を消して横になったら、アルゴリズムが大好物な動画や芸能人の重大暴露映像、ド파민爆発のショート動画をおすすめしてきた。あなたの指先は？",
+                        "text": "明日の朝9時に人生がかかった大事な面接がある。夜11時に電気を消して横になったら、アルゴリズムが大好物な芸能人の大炎上暴露動画や、ドパミンがドバドバ出るおもしろショート動画を勧めてきた。あなたの指は？",
                         "choices": {
                               "A": "「あと5分だけ…」とポチってしまい、気がついたら鳥のさえずりが聞こえる午前4時。人生の終了を直感。",
-                              "B": "動画をクリックするが、「12時ジャストになったら絶対寝る」とタイマーをセット。結局12時5분 일찍 잔다며 타협.",
-                              "C": "「이거 보면 인간 실격이다」라며 폰을 뒤집어 놓는다. 하지만 내용이 신경 쓰여 잠이 안 오고 결국 밤새 눈이 초롱초롱한 채 설친다.",
-                              "D": "뇌를 완전히 비우고 영상을 즐기며 \"에이, 면접 쯤이야 밤샘 파워로 임기응변 발휘해서 헤쳐나가면 되지~\"라며 근자감 폭발."
+                              "B": "動画をクリックするが、「12時ジャストになったら絶対寝る」とタイマーをセット。結局12時5分になり「あ、あともう1個だけ！」と叫んで妥協。",
+                              "C": "「これを見たら人間終了」とスマホを裏返す。しかし内容が気になって眠れず、結局夜中3時まで目がバキバキで夜更かし。",
+                              "D": "脳を完全に空っぽにして動画を楽しみ、「えーい、面接なんて前夜の徹夜パワーで柔軟に乗り切ればいいっしょ〜」と超ポジティブ。"
                         }
                   }
             ]
@@ -1015,6 +1015,11 @@
 };
 
     function detectLanguage() {
+      const savedLang = localStorage.getItem('user_lang');
+      if (savedLang === 'ko' || savedLang === 'ja') {
+        state.lang = savedLang;
+        return;
+      }
       const userLang = (navigator.language || navigator.languages[0] || 'ja').toLowerCase();
       if (userLang.startsWith('ko')) {
         state.lang = 'ko';
@@ -1025,6 +1030,7 @@
 
     function toggleLanguage() {
       state.lang = (state.lang === 'ja') ? 'ko' : 'ja';
+      localStorage.setItem('user_lang', state.lang);
       applyLanguage();
       const nameVal = document.getElementById('input-nickname').value;
       initDropdowns();
@@ -1048,6 +1054,8 @@
           }
         }
       });
+
+      document.title = translations[state.lang]['title'];
 
       const nicknameInput = document.getElementById('input-nickname');
       if (nicknameInput) {
