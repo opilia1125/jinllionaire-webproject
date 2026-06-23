@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
 Sitemap: https://gachi-labs.xyz/sitemap.xml
