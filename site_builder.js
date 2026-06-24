@@ -1,6 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { categorySlugs, researchLinks } = require("./site_config");
+const { sanitizeGeneratedHtml, sanitizeImagePrompt } = require("./site_cleanup");
+const { customImages } = require("./site_images");
 
 const ROOT = __dirname;
 const SITE_URL = "https://gachi-labs.xyz";
@@ -98,7 +100,7 @@ function articlePage(post) {
       ["seasonal-wheel.webp", "二十四節気を四季の循環として表した図版", "太陽の周期と四季の移り変わりを示す編集図版"],
       ["seasonal-life.webp", "季節の観察と農事や暮らしの関係を描いた図版", "暦、農事、食、年中行事のつながりを示す編集図版"],
     ]
-    : [
+    : customImages[post.slug] || [
       ["image-01.webp", `${post.title}の要点を示す図版`, `${post.title}の理解を補助する図版`],
       ["image-02.webp", `${post.title}の背景を示す図版`, `${post.title}の背景を補足する図版`],
     ];
@@ -237,11 +239,19 @@ const collectHtml = (directory) => {
 };
 collectHtml(ROOT);
 for (const file of htmlFiles) {
-  const relative = path.relative(ROOT, file);
-  const html = read(relative);
+  const relative = path.relative(ROOT, file).replaceAll("\\", "/");
+  let html = sanitizeGeneratedHtml(relative, read(relative));
   if (!html.includes('rel="icon"')) {
-    write(relative, html.replace("</head>", '  <link rel="icon" href="/favicon.svg" type="image/svg+xml">\n</head>'));
+    html = html.replace("</head>", '  <link rel="icon" href="/favicon.svg" type="image/svg+xml">\n</head>');
   }
+  write(relative, html);
+}
+
+const promptDir = path.join(ROOT, "data", "image-prompts");
+for (const entry of fs.readdirSync(promptDir, { withFileTypes: true })) {
+  if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
+  const relative = path.join("data", "image-prompts", entry.name).replaceAll("\\", "/");
+  write(relative, sanitizeImagePrompt(relative, read(relative)));
 }
 
 console.log(JSON.stringify({ buildDate: BUILD_DATE, rendered: posts.length, published: published.length, visibleCount }, null, 2));
