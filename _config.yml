@@ -1,0 +1,10 @@
+exclude:
+  - content
+  - data
+  - kuso-zensei
+  - site_builder.js
+  - site_config.js
+  - site_quality_test.js
+  - render_markdown_posts.js
+  - DESIGN.md
+  - README.md
